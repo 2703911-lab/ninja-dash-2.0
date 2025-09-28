@@ -1,60 +1,109 @@
 body {
+    font-family: Arial, sans-serif;
+    background: #111;
+    color: #fff;
+    text-align: center;
     margin: 0;
-    overflow: hidden;
-    background: black;
-    font-family: 'Courier New', monospace;
-    color: limegreen;
+    padding: 20px;
 }
 
-#matrix {
+header h1 {
+    font-size: 3em;
+    color: #ff4500; /* Ninja orange */
+}
+
+#description ul {
+    list-style: none;
+    padding: 0;
+}
+
+#description li {
+    margin: 10px 0;
+}
+
+#playBtn {
+    background: #ff4500;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.2em;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#playBtn:hover {
+    background: #ff6347;
+}
+
+#gameCanvas {
+    border: 2px solid #ff4500;
+    background: #222;
+    display: block;
+    margin: 20px auto;
+}
+
+#ui {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(0,0,0,0.7);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+#ui button {
+    display: block;
+    margin: 5px 0;
+    background: #333;
+    color: #fff;
+    border: 1px solid #ff4500;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+#ui button:hover:not(:disabled) {
+    background: #ff4500;
+}
+
+#ui button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.hidden {
+    display: none;
+}
+
+#nukeOverlay {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: -1;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
 }
 
-#login-container, #hack-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    background: rgba(0, 0, 0, 0.7);
-    padding: 20px;
-    border: 2px solid limegreen;
-}
-
-h1 {
-    font-size: 24px;
+.nuke-explosion {
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, #fff 0%, #ff4500 50%, #ff0000 100%);
+    border-radius: 50%;
+    animation: nukeExplode 2s ease-out infinite;
     margin-bottom: 20px;
 }
 
-#login-form input {
-    display: block;
-    margin: 10px auto;
-    padding: 5px;
-    background: black;
-    color: limegreen;
-    border: 1px solid limegreen;
-    font-family: 'Courier New', monospace;
-}
-
-#login-btn {
-    padding: 10px 20px;
-    background: black;
-    color: limegreen;
-    border: 2px solid limegreen;
-    cursor: pointer;
-    font-family: 'Courier New', monospace;
-}
-
-#login-btn:hover {
-    background: limegreen;
-    color: black;
-}
-
-#hack-output {
-    font-size: 16px;
-    white-space: pre-wrap;
-    text-align: left;
+@keyframes nukeExplode {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(10);
+        opacity: 0;
+    }
 }
