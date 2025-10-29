@@ -23,7 +23,7 @@ const WEAPONS = {
     pistol: { name: 'Pistol', type: 'ranged', damage: 10, range: 200, cooldown: 300, unlocked: false, cost: 7500 },
     lmg: { name: 'LMG', type: 'ranged', damage: 5, range: 150, cooldown: 100, unlocked: false, cost: 15000 },
     rpg: { name: 'RPG', type: 'ranged', damage: 50, range: 300, cooldown: 1000, area: 50, unlocked: false, cost: 30000 },
-    god: { name: 'God Weapon', type: 'ranged', damage: Infinity, range: Infinity, cooldown: 0, unlocked: false } // One-shot beam
+    god: { name: 'God Weapon', type: 'ranged', damage: 58675876, range: 50500505006, cooldown: 0, unlocked: false } // One-shot beam
 };
 let currentWeapon = 'katana';
 // Player
