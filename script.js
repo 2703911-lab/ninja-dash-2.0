@@ -10,6 +10,7 @@ const buyLMG = document.getElementById('buyLMG');
 const buyRPG = document.getElementById('buyRPG');
 let gameRunning = false;
 let won = false;
+let isDead = false;
 let score = 0;
 let health = 100;
 let lastBonusTime = Date.now();
@@ -19,7 +20,7 @@ const GRID_WIDTH = canvas.width / TILE_SIZE;
 const GRID_HEIGHT = canvas.height / TILE_SIZE;
 // Weapons
 const WEAPONS = {
-    katana: { name: 'Katana', type: 'melee', damage: 100, range: 50, cooldown: 500 },
+    katana: { name: 'Katana', type: 'melee', damage: 100, range: 60, cooldown: 500 }, // Increased range slightly
     pistol: { name: 'Pistol', type: 'ranged', damage: 10, range: 200, cooldown: 300, unlocked: false, cost: 7500 },
     lmg: { name: 'LMG', type: 'ranged', damage: 5, range: 150, cooldown: 100, unlocked: false, cost: 15000 },
     rpg: { name: 'RPG', type: 'ranged', damage: 50, range: 300, cooldown: 1000, area: 50, unlocked: false, cost: 30000 },
@@ -111,7 +112,15 @@ canvas.addEventListener('mousemove', (e) => {
     mousePos.x = e.clientX - rect.left;
     mousePos.y = e.clientY - rect.top;
 });
-// Attack function (called on space press)
+// Optional: Click to attack for easier testing (in addition to space)
+canvas.addEventListener('click', (e) => {
+    if (!gameRunning || Date.now() - player.lastAttack < WEAPONS[currentWeapon].cooldown) return;
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    attack(mouseX, mouseY);
+});
+// Attack function (called on space press or click)
 function attack(targetX, targetY) {
     player.lastAttack = Date.now();
     const dx = targetX - player.x;
@@ -175,6 +184,7 @@ function attack(targetX, targetY) {
 }
 // Update
 function update(dt) {
+    if (!gameRunning) return;
     // Player movement
     let dx = 0, dy = 0;
     if (keys['w'] || keys['arrowup']) dy -= player.speed * dt;
@@ -195,8 +205,8 @@ function update(dt) {
         lastBonusTime = Date.now();
         updateUI();
     }
-    // Spawn enemies
-    if (Math.random() < 0.02 + score / 1000000) { // Increase spawn rate
+    // Spawn enemies (increased initial rate for easier testing)
+    if (Math.random() < 0.05 + score / 1000000) { // Increased from 0.02
         const side = Math.floor(Math.random() * 4);
         let ex, ey;
         if (side === 0) { ex = Math.random() * canvas.width; ey = -20; }
@@ -212,8 +222,9 @@ function update(dt) {
             path: []
         });
     }
-    // Update enemies
+    // Update enemies (damage accumulation here, check death after loop)
     const playerTile = { x: Math.floor(player.x / TILE_SIZE), y: Math.floor(player.y / TILE_SIZE) };
+    let damageThisFrame = 0;
     enemies.forEach(enemy => {
         const enemyTile = { x: Math.floor(enemy.x / TILE_SIZE), y: Math.floor(enemy.y / TILE_SIZE) };
         if (enemy.path.length === 0 || Math.random() < 0.1) {
@@ -240,17 +251,21 @@ function update(dt) {
                 enemy.y += (dy / dist) * enemy.speed * dt;
             }
         }
-        // Collision with player
+        // Collision with player (accumulate damage)
         const pdist = Math.sqrt((player.x - enemy.x)**2 + (player.y - enemy.y)**2);
         if (pdist < player.size + enemy.size) {
-            health -= 20 * dt; // 20 damage per second
-            if (health <= 0) {
-                alert('Game Over! Final Score: ' + score);
-                gameRunning = false;
-                resetGame();
-            }
+            damageThisFrame += 20 * dt; // Accumulate per enemy
         }
     });
+    // Apply total damage once per frame (prevents multiple alerts)
+    health -= damageThisFrame;
+    if (health <= 0 && !isDead) {
+        isDead = true;
+        alert('Game Over! Final Score: ' + score);
+        gameRunning = false;
+        resetGame();
+        isDead = false;
+    }
     // Update projectiles (fixed splicing with reverse loops)
     for (let i = projectiles.length - 1; i >= 0; i--) {
         const proj = projectiles[i];
@@ -340,6 +355,7 @@ function resetGame() {
     projectiles = [];
     currentWeapon = 'katana';
     won = false;
+    isDead = false;
     Object.values(WEAPONS).forEach(w => { if (w !== WEAPONS.katana) w.unlocked = false; });
     player.x = canvas.width / 2;
     player.y = canvas.height / 2;
