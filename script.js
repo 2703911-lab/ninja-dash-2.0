@@ -23,7 +23,7 @@ const WEAPONS = {
     pistol: { name: 'Pistol', type: 'ranged', damage: 10, range: 200, cooldown: 300, unlocked: false, cost: 7500 },
     lmg: { name: 'LMG', type: 'ranged', damage: 5, range: 150, cooldown: 100, unlocked: false, cost: 15000 },
     rpg: { name: 'RPG', type: 'ranged', damage: 50, range: 300, cooldown: 1000, area: 50, unlocked: false, cost: 30000 },
-    god: { name: 'God Weapon', type: 'ranged', damage: 58675876, range: 50500505006, cooldown: 0, unlocked: false } // One-shot beam
+    god: { name: 'God Weapon', type: 'ranged', damage: Infinity, range: Infinity, cooldown: 0, unlocked: false } // One-shot beam
 };
 let currentWeapon = 'katana';
 // Player
@@ -100,7 +100,10 @@ function aStar(start, goal) {
 }
 // Input
 const keys = {};
-document.addEventListener('keydown', (e) => keys[e.key.toLowerCase()] = true);
+document.addEventListener('keydown', (e) => {
+    keys[e.key.toLowerCase()] = true;
+    if (e.key === ' ') e.preventDefault(); // Prevent space scroll
+});
 document.addEventListener('keyup', (e) => keys[e.key.toLowerCase()] = false);
 // Mouse tracking for aiming
 canvas.addEventListener('mousemove', (e) => {
@@ -317,4 +320,72 @@ function draw() {
         ctx.lineWidth = 5;
         ctx.beginPath();
         ctx.moveTo(player.x, player.y);
-        ctx.lineTo
+        ctx.lineTo(mousePos.x, mousePos.y);
+        ctx.stroke();
+    }
+}
+// UI
+function updateUI() {
+    scoreEl.textContent = `Score: ${score}`;
+    healthEl.textContent = `Health: ${Math.max(0, health)}`;
+    weaponEl.textContent = `Weapon: ${WEAPONS[currentWeapon].name}`;
+    buyPistol.disabled = score < WEAPONS.pistol.cost || WEAPONS.pistol.unlocked;
+    buyLMG.disabled = score < WEAPONS.lmg.cost || WEAPONS.lmg.unlocked;
+    buyRPG.disabled = score < WEAPONS.rpg.cost || WEAPONS.rpg.unlocked;
+}
+function resetGame() {
+    score = 0;
+    health = 100;
+    enemies = [];
+    projectiles = [];
+    currentWeapon = 'katana';
+    won = false;
+    Object.values(WEAPONS).forEach(w => { if (w !== WEAPONS.katana) w.unlocked = false; });
+    player.x = canvas.width / 2;
+    player.y = canvas.height / 2;
+    lastBonusTime = Date.now();
+    updateUI();
+}
+// Buy weapons
+buyPistol.addEventListener('click', () => {
+    if (score >= WEAPONS.pistol.cost) {
+        WEAPONS.pistol.unlocked = true;
+        currentWeapon = 'pistol';
+        updateUI();
+    }
+});
+buyLMG.addEventListener('click', () => {
+    if (score >= WEAPONS.lmg.cost) {
+        WEAPONS.lmg.unlocked = true;
+        currentWeapon = 'lmg';
+        updateUI();
+    }
+});
+buyRPG.addEventListener('click', () => {
+    if (score >= WEAPONS.rpg.cost) {
+        WEAPONS.rpg.unlocked = true;
+        currentWeapon = 'rpg';
+        updateUI();
+    }
+});
+// Play button
+playBtn.addEventListener('click', () => {
+    document.getElementById('description').style.display = 'none';
+    canvas.style.display = 'block';
+    document.getElementById('ui').style.display = 'block';
+    gameRunning = true;
+    resetGame();
+    gameLoop();
+});
+// Game loop
+function gameLoop() {
+    if (!gameRunning) return;
+    const now = Date.now();
+    const dt = (now - (window.lastTime || now)) / 1000;
+    window.lastTime = now;
+    update(dt);
+    draw();
+    requestAnimationFrame(gameLoop);
+}
+// Initial UI update
+updateUI();
