@@ -1,51 +1,42 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ninja Dash - Epic Ninja Action Game</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ninja Dash - Epic Ninja Action Game</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>Ninja Dash</h1>
-        <p>Slash your way through hordes of enemy ninjas! Rack up points, unlock weapons, and survive the dash to 500,000 for the ultimate nuke finale.</p>
-    </header>
-
-    <section id="description">
-        <h2>About the Game</h2>
-        <ul>
-            <li><strong>Core Gameplay:</strong> Top-down 2D action. Move with WASD, attack with SPACE (aims at mouse).</li>
-            <li><strong>Scoring:</strong> +500 per kill, +1,000 every 10 seconds.</li>
-            <li><strong>Weapons:</strong>
-                <ul>
-                    <li>Katana (default): Melee slash.</li>
-                    <li>Pistol (7,500 pts): Ranged shots.</li>
-                    <li>LMG (15,000 pts): Rapid fire.</li>
-                    <li>RPG (30,000 pts): Explosive blasts.</li>
-                    <li>God Weapon (0.1% drop): One-shot beam (ultra-rare!).</li>
-                </ul>
-            </li>
-            <li><strong>Win/Lose:</strong> Win at 30,000 pts. At 500,000 pts, nuke ends it all!</li>
-        </ul>
-        <button id="playBtn">Play Now</button>
-    </section>
-
-    <canvas id="gameCanvas" width="800" height="600" style="display: none;"></canvas>
-    <div id="ui">
-        <div id="score">Score: 0</div>
-        <div id="health">Health: 100</div>
-        <div id="weapon">Weapon: Katana</div>
-        <button id="buyPistol" disabled>Buy Pistol (7,500)</button>
-        <button id="buyLMG" disabled>Buy LMG (15,000)</button>
-        <button id="buyRPG" disabled>Buy RPG (30,000)</button>
-    </div>
-
-    <div id="nukeOverlay" class="hidden">
-        <div class="nuke-explosion"></div>
-        <h2>NUKE DEPLOYED! Game Over.</h2>
-    </div>
-
-    <script src="script.js"></script>
+<header>
+<h1>Ninja Dash</h1>
+<p>Slash your way through hordes of enemy ninjas! Rack up points, unlock weapons, and survive the dash to 500,000 for the ultimate nuke finale.</p>
+</header>
+<section id="description">
+<h2>About the Game</h2>
+<ul>
+<li><strong>Core Gameplay:</strong> Top-down 2D action. Move with WASD, attack with SPACE (aims at mouse).</li>
+<li><strong>Scoring:</strong> +500 per kill, +1,000 every 10 seconds.</li>
+<li><strong>Weapons:</strong>
+<ul>
+<li>Katana (default): Melee slash.</li>
+<li>Pistol (7,500 pts): Ranged shots.</li>
+<li>LMG (15,000 pts): Rapid fire.</li>
+<li>RPG (30,000 pts): Explosive blasts.</li>
+<li>God Weapon (0.1% drop): One-shot beam (ultra-rare!).</li>
+</ul>
+</li>
+<li><strong>Win/Lose:</strong> Win at 30,000 pts. At 500,000 pts, nuke ends it all!</li>
+</ul>
+<button id="playBtn">Play Now</button>
+</section>
+<canvas id="gameCanvas" width="800" height="600" style="display: none;"></canvas>
+<div id="ui">
+<div id="score">Score: 0</div>
+<div id="health">Health: 100</div>
+<div id="weapon">Weapon: Katana</div>
+<button id="buyPistol" disabled>Buy Pistol (7,500)</button>
+<button id="buyLMG" disabled>Buy LMG (15,000)</button>
+<button id="buyRPG" disabled>Buy RPG (30,000)</button>
+</div>
+<script src="script.js"></script>
 </body>
 </html>
